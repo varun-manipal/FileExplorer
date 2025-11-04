@@ -1,19 +1,22 @@
 ﻿using System.ComponentModel;
+using FileExplorer.ViewModel;
 
 namespace FileExplorer;
 
 public partial class MainPage : ContentPage,
     INotifyPropertyChanged
 {
-    private double _leftNavInitialWidth = 260;
-    private double _minLeftNavWidth = 150;
-    private double _maxLeftNavWidth = 500;
+    private double leftNavInitialWidth = 260;
+    private readonly double minLeftNavWidth = 150;
+    private readonly double maxLeftNavWidth = 500;
+
+    private FileExplorerViewModel fileExplorerViewModel = new FileExplorerViewModel();
     
     public MainPage()
     {
         InitializeComponent();
-        BindingContext = this;
-        this.LeftNavColumn.Width = _leftNavInitialWidth;
+        BindingContext = fileExplorerViewModel;
+        this.LeftNavColumn.Width = leftNavInitialWidth;
     }
     
     private void OnSplitterPanUpdated(object sender, PanUpdatedEventArgs e)
@@ -21,13 +24,13 @@ public partial class MainPage : ContentPage,
         switch (e.StatusType)
         {
             case GestureStatus.Running:
-                var newWidth = _leftNavInitialWidth + e.TotalX;
-                newWidth = Math.Max(_minLeftNavWidth, Math.Min(_maxLeftNavWidth, newWidth));
+                var newWidth = leftNavInitialWidth + e.TotalX;
+                newWidth = Math.Max(minLeftNavWidth, Math.Min(maxLeftNavWidth, newWidth));
                 this.LeftNavColumn.Width = newWidth;
                 break;
 
             case GestureStatus.Completed:
-                _leftNavInitialWidth = LeftNavColumn.Width.Value;
+                leftNavInitialWidth = LeftNavColumn.Width.Value;
                 break;
         }
     }
@@ -36,7 +39,7 @@ public partial class MainPage : ContentPage,
     {
         base.OnAppearing();
         // Ensure we store the initial width
-        _leftNavInitialWidth = LeftNavColumn.Width.Value;
+        leftNavInitialWidth = LeftNavColumn.Width.Value;
 
         // Set platform-native resize cursor for the splitter
         SetSplitterCursor();
@@ -56,45 +59,5 @@ public partial class MainPage : ContentPage,
     {
         if (SplitterHandle?.Handler == null) return;
 
-#if WINDOWS
-    try
-    {
-        var fe = SplitterHandle.Handler.PlatformView as Microsoft.UI.Xaml.FrameworkElement;
-        if (fe != null)
-        {
-            fe.ProtectedCursor = Microsoft.UI.Input.InputSystemCursor.Create(
-                Microsoft.UI.Input.InputSystemCursorShape.SizeWestEast
-            );
-        }
     }
-    catch { /* ignore */ }
-#endif
-//
-// #if MACCATALYST
-//         try
-//         {
-//             var uiView = SplitterHandle.Handler.PlatformView as UIKit.UIView;
-//             if (uiView != null)
-//             {
-//                 // Add a pointer interaction to indicate resize (horizontal)
-//                 var interaction = new UIKit.UIPointerInteraction(new HorizontalResizePointerDelegate());
-//                 uiView.AddInteraction(interaction);
-//             }
-//         }
-//         catch { /* ignore */ }
-// #endif
-    }
-//
-// #if MACCATALYST
-//     class HorizontalResizePointerDelegate : UIKit.UIPointerInteractionDelegate
-//     {
-//         public override UIKit.UIPointerStyle GetStyle(UIKit.UIPointerInteraction interaction, UIKit.UIPointerRegion region)
-//         {
-//             // Use a horizontal resize style; Apple doesn't expose a direct "ew-resize",
-//             // but a beam with shape hints reads as a resize affordance.
-//             var targetedPreview = new UIKit.UITargetedPreview(interaction.View);
-//             return UIKit.UIPointerStyle.Create(targetedPreview);
-//         }
-//     }
-// #endif
 }

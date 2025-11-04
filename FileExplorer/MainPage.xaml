@@ -26,7 +26,7 @@
                     IsEnabled="{Binding CanGoUp}"
                     BackgroundColor="Transparent"
                     TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
-            <Entry Grid.Column="4"/>
+            <Entry Grid.Column="4" Text="{Binding CurrentPath}"/>
             <Border Grid.Column="5" WidthRequest="280"
                     HeightRequest="36"
                     StrokeShape="RoundRectangle 6">
