@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FileExplorer.MainPage">
+    <Grid RowDefinitions="Auto, Auto, *"
+          ColumnDefinitions="*">
+        <!--Address Bar-->
+        <Grid Padding="12,10" RowSpacing="8" ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Text="◀" Command="{Binding BackCommand}" 
+                    IsEnabled="{Binding CanGoBack}" 
+                    BackgroundColor="Transparent"
+                    TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+            <Button Grid.Column="1" Text="▶" Command="{Binding ForwardCommand}" 
+                    IsEnabled="{Binding CanGoForward}"
+                    BackgroundColor="Transparent"
+                    TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+            <Button Grid.Column="2" Text="⬆" Command="{Binding UpCommand}" 
+                    IsEnabled="{Binding CanGoUp}"
+                    BackgroundColor="Transparent"
+                    TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+            <Entry Grid.Column="4"/>
+            <Border Grid.Column="5" WidthRequest="280"
+                    HeightRequest="36"
+                    StrokeShape="RoundRectangle 6">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Entry Placeholder="Search"
+                           Grid.Column="0"
+                           ClearButtonVisibility="WhileEditing"
+                           ReturnType="Search"/>
+                    <Button Grid.Column="1" Text="🔎" Command="{Binding SearchCommand}" />
+                </Grid>
+            </Border>
+        </Grid>
+        
+        <!--Body-->
+        <Grid x:Name="BodyGrid" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftNavColumn" Width="260" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <!-- Left Navigation -->
+            <Grid Grid.Column="0" BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2d2d2d}">
+                <CollectionView ItemsSource="{Binding LeftNavItems}" 
+                                SelectionMode="Single" 
+                                SelectedItem="{Binding SelectedLeftNavItem}"
+                                EmptyView="No items">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="12,8" ColumnDefinitions="24,*">
+                                <Label Text="{Binding Icon}" Grid.Column="0" VerticalTextAlignment="Center"/>
+                                <Label Text="{Binding Label}" Grid.Column="1" VerticalTextAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+
+            <!-- Resizable Splitter -->
+            <Grid x:Name="SplitterHandle"
+                  Grid.Column="0"
+                  HorizontalOptions="End"
+                  WidthRequest="6"
+                  BackgroundColor="Transparent"
+                  VerticalOptions="Fill"
+                  InputTransparent="False">
+                <BoxView Color="{AppThemeBinding Light=#e5e5e5, Dark=#3a3a3a}"
+                         WidthRequest="1"
+                         HorizontalOptions="End"
+                         VerticalOptions="Fill" />
+                <Grid.GestureRecognizers>
+                    <PanGestureRecognizer PanUpdated="OnSplitterPanUpdated" />
+                    <PointerGestureRecognizer PointerEntered="OnSplitterPointerEntered"
+                                              PointerExited="OnSplitterPointerExited" />
+                </Grid.GestureRecognizers>
+            </Grid>
+
+            <!-- File List -->
+            <Grid Grid.Column="1" BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#1f1f1f}">
+                <CollectionView ItemsSource="{Binding Items}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="12,6" ColumnDefinitions="*,200,160,120">
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label Text="{Binding Icon}" VerticalTextAlignment="Center"/>
+                                    <Label Text="{Binding Name}" VerticalTextAlignment="Center"/>
+                                </HorizontalStackLayout>
+                                <Label Grid.Column="1" Text="{Binding DateModified, StringFormat='{0:yyyy-MM-dd HH:mm}'}" VerticalTextAlignment="Center"/>
+                                <Label Grid.Column="2" Text="{Binding Type}" VerticalTextAlignment="Center"/>
+                                <Label Grid.Column="3" Text="{Binding SizeDisplay}" VerticalTextAlignment="Center" HorizontalTextAlignment="End"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Grid>
+        
+    </Grid>
+</ContentPage>
