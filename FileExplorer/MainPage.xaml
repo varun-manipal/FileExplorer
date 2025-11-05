@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="FileExplorer.MainPage">
+             x:Class="FileExplorer.MainPage"
+             BackgroundColor="#40FFFFFF">
+   
     <Grid RowDefinitions="Auto, Auto, *"
           ColumnDefinitions="*">
         <!--Address Bar-->
@@ -26,7 +28,8 @@
                     IsEnabled="{Binding CanGoUp}"
                     BackgroundColor="Transparent"
                     TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
-            <Entry Grid.Column="4" Text="{Binding CurrentPath}"/>
+            <Entry Grid.Column="4" Text="{Binding CurrentPath}"
+                   Style="{StaticResource ModernEntryStyle}" Placeholder="Documents"/>
             <Border Grid.Column="5" WidthRequest="280"
                     HeightRequest="36"
                     StrokeShape="RoundRectangle 6">
@@ -85,7 +88,9 @@
 
             <!-- File List -->
             <Grid Grid.Column="1" BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#1f1f1f}">
-                <CollectionView ItemsSource="{Binding Items}">
+                <CollectionView ItemsSource="{Binding FileList}" 
+                                SelectionMode="Single"
+                                SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Grid Padding="12,6" ColumnDefinitions="*,200,160,120">
@@ -96,12 +101,17 @@
                                 <Label Grid.Column="1" Text="{Binding DateModified, StringFormat='{0:yyyy-MM-dd HH:mm}'}" VerticalTextAlignment="Center"/>
                                 <Label Grid.Column="2" Text="{Binding Type}" VerticalTextAlignment="Center"/>
                                 <Label Grid.Column="3" Text="{Binding SizeDisplay}" VerticalTextAlignment="Center" HorizontalTextAlignment="End"/>
+                                <Grid.FlyoutBase.ContextFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Text="Edit"/>
+                                        <MenuFlyoutItem Text="Delete"/>
+                                    </MenuFlyout>
+                                </Grid.FlyoutBase.ContextFlyout>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </Grid>
         </Grid>
-        
     </Grid>
 </ContentPage>

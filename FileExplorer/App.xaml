@@ -5,6 +5,19 @@
              x:Class="FileExplorer.App">
     <Application.Resources>
         <ResourceDictionary>
+            <Style TargetType="Entry" x:Key="ModernEntryStyle">
+                <Setter Property="BackgroundColor" Value="#F7F9FB"/>
+                <Setter Property="TextColor" Value="#222"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="HeightRequest" Value="44"/>
+                <Setter Property="Margin" Value="0,10"/>
+                <!-- <Setter Property="Padding" Value="16,0"/> -->
+                <!-- <Setter Property="CornerRadius" Value="8"/> -->
+                <!-- <Setter Property="BorderColor" Value="#d5dee6"/> -->
+                <!-- <Setter Property="BorderWidth" Value="1"/> -->
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+            </Style>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
